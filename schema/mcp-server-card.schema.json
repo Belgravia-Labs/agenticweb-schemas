@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticweb.wiki/schema/mcp-server-card.schema.json",
+  "title": "MCP Server Card (SEP-2127)",
+  "description": "Static metadata document a remote MCP server publishes for pre-connection discovery (SEP-2127). Identity is required; transport, package, capability, and authentication metadata are optional.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["$schema", "name", "version", "description"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1,
+      "description": "JSON Schema URI this card declares."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Server name, conventionally namespace/server with a single slash."
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Server version string. Semantic versions are preferred; version ranges are out of scope."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable explanation of what the server does."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional display name."
+    },
+    "websiteUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Optional homepage or project URL."
+    },
+    "documentationUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Optional documentation URL."
+    },
+    "icons": {
+      "type": "array",
+      "description": "Optional icons a client may display.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["src"],
+        "properties": {
+          "src": { "type": "string", "minLength": 1 },
+          "mimeType": { "type": "string" },
+          "sizes": { "type": "array", "items": { "type": "string" } },
+          "theme": { "type": "string", "enum": ["light", "dark"] }
+        }
+      }
+    },
+    "remotes": {
+      "type": "array",
+      "description": "Optional HTTP transports a client can connect to before listing tools.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["type", "url"],
+        "properties": {
+          "type": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "minLength": 1 },
+          "supportedProtocolVersions": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "packages": {
+      "type": "array",
+      "description": "Optional installable package coordinates (registry server.json shape).",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "registryType": { "type": "string" },
+          "identifier": { "type": "string" },
+          "version": { "type": "string" },
+          "transport": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional declared capability flags. Runtime tool lists stay authoritative."
+    },
+    "authentication": {
+      "description": "Optional authentication requirements for connecting to the server.",
+      "anyOf": [
+        { "type": "object", "additionalProperties": true },
+        { "type": "array" },
+        { "type": "string" },
+        { "type": "boolean" }
+      ]
+    },
+    "_meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Extension metadata. Prefer reverse-DNS keys for vendor data."
+    }
+  }
+}

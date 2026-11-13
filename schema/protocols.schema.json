@@ -115,10 +115,8 @@
         "target_id": { "type": "string" },
         "target_name": { "type": "string" }
       }
-    }
-  },
-  "type": "array",
-  "items": {
+    },
+    "protocolRecord": {
     "type": "object",
     "required": ["id","name","acronym","aliases","collisions","step","parties","form","track","scope","question","analog",
                  "origin","governance","native_status","phase","implementation","adoption","version","spec_url",
@@ -425,4 +423,13 @@
     },
     "additionalProperties": false
   }
+  },
+  "anyOf": [
+    {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/protocolRecord" }
+    },
+    { "$ref": "#/$defs/protocolRecord" }
+  ]
 }
