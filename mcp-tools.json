@@ -5,11 +5,19 @@
  },
  {
   "name": "get",
-  "description": "Fetch one standard's complete specification record by id, acronym, filename, or RFC number. Returns { id, name, acronym, step, tier, lifecycle_status, phase, native_status, wire_archetype, governance, version, spec_url, discovery, adoption, summary_md, status_notice_md, superseded_by, probe_rule, has_template, last_verified, freshness, watch_count, last_change, evidence, url } (or unknown-id error with nearest matches). Use get for a known standard; use search to find unknown ids or define for glossary concepts."
+  "description": "Fetch one standard's complete specification record by id, acronym, filename, or RFC number. Returns the record fields plus url, probe_rule, has_template, freshness, and evidence. When present, v0.5 fields are returned verbatim: v05_infobox_rows, v05_identity_sentence_md, v05_lead_md, v05_problem_md, v05_counterparts, v05_see_also, v05_wire_artifact, v05_last_checked_display. Use get for a known standard; use search to find unknown ids, compare for a verified pair, or define for glossary concepts."
+ },
+ {
+  "name": "compare",
+  "description": "Return a side-by-side view of two standards using only verified record fields. Pass a and b (id, acronym, or name). Returns { a, b, agentic_peers, comparison_url, license } where each side is { id, name, acronym, step, tier, lifecycle_status, question, spec_url, url, v05_identity_sentence_md, v05_problem_md, v05_infobox_rows, v05_last_checked_display }. agentic_peers are verbatim v05_counterparts.agentic_peers entries that point from one side to the other. comparison_url is the canonical /compare/ page when that slug exists, otherwise null. Use compare for a verified pair; use search if an id is unknown."
  },
  {
   "name": "search",
   "description": "Search 132 standards and 52 glossary terms by keyword, acronym, alias, or 'A vs B' pair (pass q or alias query, 2–200 chars). Returns { results (top 10 ranked by title/alias/body match), matching_terms, comparison_url (when a curated comparison page exists for the top pair), next_steps } or nearest_ids/nearest_terms hints when empty. Use search for keyword discovery; use get for an exact id or ask for stack recommendations."
+ },
+ {
+  "name": "instances",
+  "description": "List observed implementations from the instances index. Optional filters: protocol (id or alias), type (origin, harness, sdk, venue, authority, agent), archetype, org (org_id), q (substring), limit (1–20, default 10). Returns { matched, returned, license, items } with id, org_id, name, type, url, implements, archetypes, observed, note, source, and implementations (protocol_id, role, support_level, probe_mode, status, checked_on; narrowed to the requested protocol when one was given)."
  },
  {
   "name": "has",
@@ -29,7 +37,7 @@
  },
  {
   "name": "validate_manifest",
-  "description": "Audit a public origin across 12 syntax-validated manifests and 37 protocol probe rules (7d KV report cache; fresh: true re-probes live with 5-min cooldown, 30/min limit) or validate local file text in-memory before deploy (pass id + content, 120/min limit, no network fetch). Returns { grade (A+ to F), score, subscores, conformance_summary, agent_routing, connect_recipe, permissions, manifests }; combine verify: true (live MCP/A2A handshakes), bridge: true (ARD/AI Catalog cross-manifest check), diff: true (score_delta vs prior snapshot), or brief/compact payload trimming. Use validate_manifest for conformance grading and local linting; use probe for ungraded discovery or template to generate starter files."
+  "description": "Audit a public origin across 12 syntax-validated manifests and 37 protocol probe rules (7d KV report cache; fresh: true re-probes live with 5-min cooldown, 30/min limit) or validate local file text in-memory before deploy (pass id + content, 120/min limit, no network fetch). Returns { grade (A+ to F), score, subscores, conformance_summary, agent_routing, connect_recipe, permissions, manifests }; combine verify: true (live MCP/A2A handshakes), bridge: true (ARD/AI Catalog cross-manifest check), diff: true (score_delta vs the previous KV cached report, or none when no snapshot is stored), or brief/compact payload trimming. Use validate_manifest for conformance grading and local linting; use probe for ungraded discovery or template to generate starter files."
  },
  {
   "name": "template",
@@ -37,10 +45,10 @@
  },
  {
   "name": "ask",
-  "description": "Recommend and rank standards to implement for an engineering goal (pass question/q and/or use_case + audience filters). Returns { question, use_cases, standards (ranked by phase, tier, and adoption), do_this_first, avoid, also_consider, comparisons? }. Use ask for architecture and stack decisions; use search for keyword lookup or get for one standard's record."
+  "description": "Match standards to an engineering goal (pass question/q and/or use_case + audience filters). Returns { question, matched_use_cases, standards (active matches: id, name, step, tier, lifecycle_status, phase, url), retired_or_superseded, avoid (alias of retired_or_superseded), comparisons }. Use ask to see which standards match a goal; use search for keyword lookup or get for one standard's record."
  },
  {
   "name": "digest",
-  "description": "Fetch the curated daily agentic-web news and adoption digest for a YYYY-MM-DD date (defaults to latest). Returns { version, date, url, generated_at, window, headline, lede, items, stats, record_changes, previous, method, license }; pass list: true to return { latest, count, digests, page }, or compact: true (alias: include_stats: false) to omit the census stats block. Use digest for daily narrative summaries; use changes for raw field-level diffs."
+  "description": "Fetch the curated daily agentic-web news and adoption digest for a YYYY-MM-DD date (defaults to latest). Returns the stored digest plus latest_date and days_old (whole UTC days behind the newest digest; 0 when this date is the latest). Pass list: true to return { latest, latest_date, days_old: null, count, digests, page }, or compact: true (alias: include_stats: false) to omit the stats block. Use digest for daily narrative summaries; use changes for raw field-level diffs."
  }
 ]
