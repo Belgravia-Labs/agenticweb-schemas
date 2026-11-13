@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "name", "url", "type", "implements", "org_id", "archetypes", "implementations", "observed", "date_basis", "source", "note"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "org_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "name": { "type": "string", "minLength": 1 },
+      "url": { "type": "string", "pattern": "^https://" },
+      "type": {
+        "enum": [
+          "origin",
+          "harness",
+          "sdk",
+          "venue",
+          "authority",
+          "agent"
+        ]
+      },
+      "implements": {
+        "type": "array",
+        "minItems": 1,
+        "items": { "type": "string" }
+      },
+      "archetypes": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "payments_onchain",
+            "web_discovery",
+            "crawler_policy",
+            "harnesses_rpc_ui",
+            "browser_telemetry",
+            "identity_auth_crypto"
+          ]
+        }
+      },
+      "implementations": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": [
+            "protocol_id",
+            "schema_id",
+            "archetype_slug",
+            "side",
+            "actor",
+            "role",
+            "status",
+            "status_display",
+            "support_level"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "protocol_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+            "schema_id": { "type": "string" },
+            "archetype_slug": { "type": "string" },
+            "side": { "type": "string", "pattern": "^(side_a|side_b|additional_[a-z0-9_-]+)$" },
+            "actor": { "type": "string" },
+            "role": { "type": "string" },
+            "status": { "type": "string" },
+            "status_display": { "type": "string" },
+            "support_level": { "type": "string", "enum": ["full", "partial", "planned", "none"] },
+            "probe_mode": { "type": ["string", "null"] },
+            "checked_on": { "type": ["string", "null"], "pattern": "^\\d{4}(?:-\\d{2}(?:-\\d{2})?)?$" },
+            "as_of": { "type": ["string", "null"], "pattern": "^\\d{4}(?:-\\d{2}(?:-\\d{2})?)?$" },
+            "col4_md": { "type": "string" },
+            "full_detail_md": { "type": ["string", "null"] },
+            "facets": {
+              "type": ["object", "null"],
+              "propertyNames": { "pattern": "^[a-zA-Z0-9_.-]+$" },
+              "additionalProperties": { "type": ["string", "number", "boolean", "null", "array"] }
+            },
+            "telemetry": {
+              "type": ["object", "null"],
+              "propertyNames": { "pattern": "^[a-zA-Z0-9_.-]+$" },
+              "additionalProperties": { "type": ["string", "number", "boolean", "null", "array"] }
+            },
+            "source_url": { "type": ["string", "null"], "pattern": "^https://" }
+          }
+        }
+      },
+      "observed": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+      "date_basis": { "enum": ["source", "recorded"] },
+      "source": { "type": "string", "pattern": "^https://" },
+      "note": { "type": "string" }
+    }
+  }
+}

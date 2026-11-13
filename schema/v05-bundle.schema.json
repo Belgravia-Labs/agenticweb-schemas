@@ -1,0 +1,489 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticweb.wiki/schema/v05-bundle.schema.json",
+  "title": "v0.5 cleanroom page bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol_id",
+    "1_metadata_infobox",
+    "2_lead_and_problem",
+    "3_protocol_graph",
+    "4_adoption_block3",
+    "source_catalog"
+  ],
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_url", "anchor_quote"],
+      "properties": {
+        "source_url": { "type": "string" },
+        "anchor_quote": { "type": "string" }
+      }
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "org": { "type": "string" },
+        "date": { "type": ["string", "null"] }
+      }
+    },
+    "version_object": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "date": { "type": ["string", "null"] },
+        "citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mechanism": { "type": "string" },
+        "path": { "type": ["string", "null"] }
+      }
+    },
+    "evidence_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor_quote": { "type": "string" },
+        "archive_url": { "type": "string" },
+        "checked": { "type": "string" },
+        "claim": { "type": "string" },
+        "content_sha256": { "type": "string" },
+        "date": { "type": ["string", "null"] },
+        "field": { "type": "string" },
+        "http_status": { "type": "integer" },
+        "label": { "type": "string" },
+        "ref": { "type": "integer" },
+        "retrieved_at": { "type": "string" },
+        "source_type": { "type": "string" },
+        "source_url": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "infobox_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value_md"],
+      "properties": {
+        "label": { "type": "string" },
+        "value_md": { "type": "string" },
+        "citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } }
+      }
+    },
+    "ietf_tracker": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "as_of": { "type": "string" },
+        "doc": { "type": "string" },
+        "expires_utc": { "type": ["string", "null"] },
+        "group_type": { "type": "string" },
+        "posted_utc": { "type": "string" },
+        "replaced_by": { "type": ["string", "null"] },
+        "rev": { "type": "string" },
+        "source": { "type": "string" },
+        "source_label": { "type": "string" },
+        "state": { "type": "string" },
+        "stream": { "type": "string" },
+        "wg": { "type": "string" }
+      }
+    },
+    "clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string" },
+        "text_md": { "type": "string" },
+        "citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } }
+      }
+    },
+    "sentence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "present": { "type": "boolean" },
+        "text_md": { "type": "string" },
+        "citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } },
+        "clauses": { "type": "array", "items": { "$ref": "#/$defs/clause" } },
+        "announcement_date": { "type": "string" },
+        "version_date": { "type": "string" },
+        "baseline_mechanism": { "type": "string" },
+        "sender_party": { "type": ["string", "null"] },
+        "receiver_party": { "type": ["string", "null"] },
+        "surface_kind": { "type": "string" },
+        "wire_surfaces": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "elevator_pitch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "citations": { "type": "array" },
+        "human_approved": { "type": "boolean" },
+        "present": { "type": "boolean" },
+        "text_md": { "type": "string" }
+      }
+    },
+    "diagram": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "caption": { "type": "string" },
+        "caption_md": { "type": "string" },
+        "citations": { "type": "array" },
+        "human_approved": { "type": "boolean" },
+        "mermaid": { "type": "string" },
+        "pinned_source_url": { "type": "string" },
+        "present": { "type": "boolean" },
+        "title": { "type": "string" }
+      }
+    },
+    "wire_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "caption": { "type": "string" },
+        "caption_md": { "type": ["string", "null"] },
+        "citations": { "type": "array" },
+        "code": { "type": ["string", "null"] },
+        "human_approved": { "type": "boolean" },
+        "lang": { "type": ["string", "null"] },
+        "pinned_source_url": { "type": ["string", "null"] },
+        "present": { "type": "boolean" },
+        "title": { "type": ["string", "null"] }
+      }
+    },
+    "fuzzy_body": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "present": { "type": "boolean" },
+        "text_md": { "type": "string" },
+        "citations": { "type": "array" },
+        "clauses": { "type": "array" }
+      }
+    },
+    "fuzzy_bullet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "text_md", "citations"],
+      "properties": {
+        "label": { "type": "string" },
+        "text_md": { "type": "string" },
+        "citations": { "type": "array" },
+        "text": { "type": "string" }
+      }
+    },
+    "fuzzy_addition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "body": { "$ref": "#/$defs/fuzzy_body" },
+        "bullets": { "type": "array", "items": { "$ref": "#/$defs/fuzzy_bullet" } },
+        "heading": { "type": "string" },
+        "human_approved": { "type": "boolean" },
+        "id": { "type": "string" },
+        "present": { "type": "boolean" },
+        "section_id": { "type": "string" }
+      }
+    },
+    "classic_analogue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "citations": { "type": "array" },
+        "delta": { "type": "string" },
+        "relation": { "type": "string" },
+        "target_id": { "type": "string" },
+        "target_label": { "type": "string" },
+        "target_name": { "type": "string" },
+        "target_spec": { "type": "string" },
+        "target_url": { "type": "string" }
+      }
+    },
+    "agentic_peer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "citations": { "type": "array" },
+        "delta": { "type": "string" },
+        "relation": { "type": "string" },
+        "target_id": { "type": "string" },
+        "target_name": { "type": "string" }
+      }
+    },
+    "inbound_peer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "citations": { "type": "array" },
+        "delta": { "type": "string" },
+        "relation": { "type": "string" },
+        "relation_label": { "type": "string" },
+        "target_id": { "type": "string" },
+        "target_name": { "type": "string" }
+      }
+    },
+    "registration_posture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["none", "iana"] }
+      }
+    },
+    "source_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "url"],
+      "properties": {
+        "label": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "instance_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "org_id", "name", "url", "type", "support_level"],
+      "properties": {
+        "id": { "type": "string" },
+        "org_id": { "type": ["string", "null"] },
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "type": { "type": "string" },
+        "support_level": { "type": "string" }
+      }
+    },
+    "probe_expect": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "http_status": { "type": "array", "items": { "type": "integer" } },
+        "content_type_prefix": { "type": "string" }
+      }
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string" },
+        "probe_url": { "type": "string" },
+        "probe_status": { "type": "string" },
+        "checked_on": { "type": ["string", "null"] },
+        "as_of": { "type": ["string", "null"] },
+        "telemetry": {
+          "type": ["object", "null"],
+          "propertyNames": { "pattern": "^[a-zA-Z0-9_.-]+$" },
+          "additionalProperties": { "type": ["string", "number", "boolean", "null", "array"] }
+        },
+        "expect": { "$ref": "#/$defs/probe_expect" }
+      }
+    },
+    "adoption_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "status", "col4_md", "source_links", "citations"],
+      "properties": {
+        "actor": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string" },
+        "col4_md": { "type": "string" },
+        "full_detail_md": { "type": ["string", "null"] },
+        "facets": {
+          "type": ["object", "null"],
+          "propertyNames": { "pattern": "^[a-zA-Z0-9_.-]+$" },
+          "additionalProperties": { "type": ["string", "number", "boolean", "null", "array"] }
+        },
+        "source_links": { "type": "array", "items": { "$ref": "#/$defs/source_link" } },
+        "citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } },
+        "export_instance": { "type": "boolean" },
+        "instance": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/instance_ref" }] },
+        "probe": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/probe" }] }
+      }
+    },
+    "adoption_table": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "heading": { "type": "string" },
+        "col4_header": { "type": "string" },
+        "id": { "type": "string" },
+        "visible": { "type": "boolean" },
+        "note_md": { "type": "string" },
+        "note_citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } },
+        "rows": { "type": "array", "items": { "$ref": "#/$defs/adoption_row" } }
+      }
+    },
+    "census": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor_quote": { "type": "string" },
+        "as_of": { "type": ["string", "null"] },
+        "caveat_md": { "type": "string" },
+        "citations": { "type": "array" },
+        "denominator": { "type": "integer" },
+        "id": { "type": "string" },
+        "methodology_note": { "type": "string" },
+        "metric": { "type": "string" },
+        "numerator": { "type": "integer" },
+        "population": { "type": "string" },
+        "rate": { "type": "number" },
+        "source_label": { "type": "string" },
+        "source_url": { "type": "string" },
+        "value_md": { "type": "string" }
+      }
+    },
+    "footer_clause": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text_md": { "type": "string" },
+        "citations": { "type": "array" }
+      }
+    },
+    "source_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author_or_org", "title", "date_display"],
+      "properties": {
+        "author_or_org": { "type": "string" },
+        "title": { "type": "string" },
+        "date_display": { "type": "string" },
+        "role": { "type": "string" },
+        "url": { "type": "string" },
+        "text": { "type": "string" },
+        "label": { "type": "string" },
+        "tier": { "type": "integer" }
+      }
+    }
+  },
+  "properties": {
+    "protocol_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "1_metadata_infobox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "acronym", "aliases", "step", "form", "track", "hatnote_md", "last_verified", "hatnote_citations", "infobox_rows"],
+      "properties": {
+        "name": { "type": "string" },
+        "acronym": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "step": { "type": "string" },
+        "form": { "type": "string" },
+        "form_display": { "type": ["string", "null"] },
+        "track": { "type": "string" },
+        "track_display": { "type": ["string", "null"] },
+        "origin": { "$ref": "#/$defs/origin" },
+        "origin_display": { "type": ["string", "null"] },
+        "governance": { "type": "string" },
+        "native_status": { "type": "string" },
+        "version": { "anyOf": [{ "type": "string" }, { "$ref": "#/$defs/version_object" }] },
+        "version_display": { "type": ["string", "null"] },
+        "spec_url": { "type": "string" },
+        "spec_display": { "type": ["string", "null"] },
+        "discovery": { "$ref": "#/$defs/discovery" },
+        "headers_display": { "type": ["string", "null"] },
+        "schemes_display": { "type": ["string", "null"] },
+        "networks_display": { "type": ["string", "null"] },
+        "message_format_display": { "type": ["string", "null"] },
+        "transports_display": { "type": ["string", "null"] },
+        "record_format_display": { "type": ["string", "null"] },
+        "token_format_display": { "type": ["string", "null"] },
+        "registry_display": { "type": ["string", "null"] },
+        "sdks_display": { "type": ["string", "null"] },
+        "license_display": { "type": ["string", "null"] },
+        "iana_registrations": { "type": ["string", "null"] },
+        "ietf_tracker": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/ietf_tracker" }] },
+        "hatnote_md": { "type": ["string", "null"] },
+        "last_verified": { "type": "string" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence_item" } },
+        "hatnote_citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } },
+        "infobox_rows": { "type": "array", "items": { "$ref": "#/$defs/infobox_row" } }
+      }
+    },
+    "2_lead_and_problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_id", "name", "category", "lead", "problem_solved", "diagram", "wire_artifact", "fuzzy_additions", "regenerated_at"],
+      "properties": {
+        "protocol_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "lead": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["identity_sentence", "lifecycle_and_version_note", "wire_or_artifact_sentence"],
+          "properties": {
+            "identity_sentence": { "$ref": "#/$defs/sentence" },
+            "lifecycle_and_version_note": { "$ref": "#/$defs/sentence" },
+            "wire_or_artifact_sentence": { "$ref": "#/$defs/sentence" }
+          }
+        },
+        "problem_solved": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["baseline_limitation", "mechanism_delta", "scope_boundary"],
+          "properties": {
+            "baseline_limitation": { "$ref": "#/$defs/sentence" },
+            "mechanism_delta": { "$ref": "#/$defs/sentence" },
+            "scope_boundary": { "$ref": "#/$defs/sentence" }
+          }
+        },
+        "elevator_pitch": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/elevator_pitch" }] },
+        "diagram": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/diagram" }] },
+        "wire_artifact": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/wire_artifact" }] },
+        "fuzzy_additions": { "type": "array", "items": { "$ref": "#/$defs/fuzzy_addition" } },
+        "remaining_friction_note": { "type": ["string", "null"] },
+        "regenerated_at": { "type": "string" }
+      }
+    },
+    "3_protocol_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_id", "category", "acronym_collisions", "classic_analogues", "agentic_peers", "inbound_only_peers"],
+      "properties": {
+        "protocol_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "category": { "type": "string" },
+        "acronym_collisions": { "type": "array", "items": { "type": "string" } },
+        "classic_analogues": { "type": "array", "items": { "$ref": "#/$defs/classic_analogue" } },
+        "agentic_peers": { "type": "array", "items": { "$ref": "#/$defs/agentic_peer" } },
+        "inbound_only_peers": { "type": "array", "items": { "$ref": "#/$defs/inbound_peer" } },
+        "see_also_items_md": { "type": ["array", "null"], "items": { "type": "string" } }
+      }
+    },
+    "4_adoption_block3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol_id", "schema_id", "visible", "registration_posture", "side_a", "side_b", "censuses", "footer_clauses"],
+      "properties": {
+        "protocol_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "protocol_name": { "type": "string" },
+        "schema_id": { "type": "string" },
+        "visible": { "type": "boolean" },
+        "registration_posture": { "$ref": "#/$defs/registration_posture" },
+        "empty_state_note_md": { "type": "string" },
+        "empty_state_citations": { "type": "array", "items": { "$ref": "#/$defs/citation" } },
+        "side_a": { "$ref": "#/$defs/adoption_table" },
+        "side_b": { "$ref": "#/$defs/adoption_table" },
+        "additional_tables": {
+          "type": ["array", "null"],
+          "items": { "$ref": "#/$defs/adoption_table" }
+        },
+        "censuses": { "type": "array", "items": { "$ref": "#/$defs/census" } },
+        "footer_clauses": { "type": "array", "items": { "$ref": "#/$defs/footer_clause" } }
+      }
+    },
+    "source_catalog": {
+      "type": "object",
+      "propertyNames": { "pattern": "^https://" },
+      "additionalProperties": { "$ref": "#/$defs/source_entry" }
+    }
+  }
+}

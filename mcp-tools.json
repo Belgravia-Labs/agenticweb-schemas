@@ -1,0 +1,46 @@
+[
+ {
+  "name": "define",
+  "description": "Define an agentic-web glossary term or standard by id, name, or alias. Returns { kind, id, name, definition_md, related_protocols, url } (plus standard_id/standard_summary_md when linked, or nearest-term hints on unknown-term error). Use define for concept definitions; use get when you need a standard's full specification record, or search for keyword discovery."
+ },
+ {
+  "name": "get",
+  "description": "Fetch one standard's complete specification record by id, acronym, filename, or RFC number. Returns { id, name, acronym, step, tier, lifecycle_status, phase, native_status, wire_archetype, governance, version, spec_url, discovery, adoption, summary_md, status_notice_md, superseded_by, probe_rule, has_template, last_verified, freshness, watch_count, last_change, evidence, url } (or unknown-id error with nearest matches). Use get for a known standard; use search to find unknown ids or define for glossary concepts."
+ },
+ {
+  "name": "search",
+  "description": "Search 132 standards and 52 glossary terms by keyword, acronym, alias, or 'A vs B' pair (pass q or alias query, 2–200 chars). Returns { results (top 10 ranked by title/alias/body match), matching_terms, comparison_url (when a curated comparison page exists for the top pair), next_steps } or nearest_ids/nearest_terms hints when empty. Use search for keyword discovery; use get for an exact id or ask for stack recommendations."
+ },
+ {
+  "name": "has",
+  "description": "Check one public origin over HTTPS for a single standard or manifest (rate-limited to 120/min). Returns { origin, id, found, outcome, status, url, reason, article } without grading the full site. Use has for a fast single-file check; use probe to evaluate all 37 protocol probe rules at once, or validate_manifest for A+–F conformance grading."
+ },
+ {
+  "name": "probe",
+  "description": "Scan a public origin across 37 protocol probe rules covering 30 agent-facing paths and headers (24h KV packet cache with 7d report fallback; pass fresh: true to re-probe live with a 5-min per-origin cooldown, rate-limited to 30/min). Returns { origin, checked, outcome, found_ids, found, absent, skipped, coverage, extracted, connect_recipe }; pass brief: true for found_ids + extracted endpoints only, compact: true to replace absent/skipped maps with absent_ids[], or verify: true to handshake MCP/A2A endpoints. Use probe for raw multi-path discovery; use has for one standard, or validate_manifest for A+–F conformance scoring."
+ },
+ {
+  "name": "changes",
+  "description": "List machine-verified specification changes since a YYYY-MM-DD date or ISO-8601 timestamp (newest first, default 50, max 200). Returns { changes: [{ id, date, record_id, kind, field, from, to, claim, evidence_url, detector, commit }], total, since } filtered optionally by lifecycle step or record_id. Use changes for field-level spec diffs; use stale to audit unverified records or digest for daily ecosystem news."
+ },
+ {
+  "name": "stale",
+  "description": "List standards whose last_verified date is older than N days (default 30), optionally filtered by lifecycle step. Returns { days, cutoff, total_standards, oldest_verified, newest_verified, records: [{ id, name, step, last_verified, freshness, url }] }. Use stale to audit verification freshness; use changes to inspect actual specification edits since a date."
+ },
+ {
+  "name": "validate_manifest",
+  "description": "Audit a public origin across 12 syntax-validated manifests and 37 protocol probe rules (7d KV report cache; fresh: true re-probes live with 5-min cooldown, 30/min limit) or validate local file text in-memory before deploy (pass id + content, 120/min limit, no network fetch). Returns { grade (A+ to F), score, subscores, conformance_summary, agent_routing, connect_recipe, permissions, manifests }; combine verify: true (live MCP/A2A handshakes), bridge: true (ARD/AI Catalog cross-manifest check), diff: true (score_delta vs prior snapshot), or brief/compact payload trimming. Use validate_manifest for conformance grading and local linting; use probe for ungraded discovery or template to generate starter files."
+ },
+ {
+  "name": "template",
+  "description": "Generate in-memory starter boilerplate for any of the 12 supported manifest ids (ard, ai-catalog-well-known-file [alias: ai-catalog], llms-txt, agents-md, anthropic-agent-skills-format [alias: agent-skills], mcp-server-cards, a2a, ai-crawler-tokens-robots, api-catalog-rfc9727, security-txt, auth-md, okf) without writing to disk. Returns { id, tier, maturity_note, target_path, content_type, recommended_headers, contents, edit_these, notes, spec_url, article, validate_with, filled_from }; when from_live: true is passed with domain, it probes the public origin over HTTPS to pre-fill discovered MCP, OpenAPI, A2A, and contact URLs. Use template to author a new manifest; use validate_manifest to lint existing content."
+ },
+ {
+  "name": "ask",
+  "description": "Recommend and rank standards to implement for an engineering goal (pass question/q and/or use_case + audience filters). Returns { question, use_cases, standards (ranked by phase, tier, and adoption), do_this_first, avoid, also_consider, comparisons? }. Use ask for architecture and stack decisions; use search for keyword lookup or get for one standard's record."
+ },
+ {
+  "name": "digest",
+  "description": "Fetch the curated daily agentic-web news and adoption digest for a YYYY-MM-DD date (defaults to latest). Returns { version, date, url, generated_at, window, headline, lede, items, stats, record_changes, previous, method, license }; pass list: true to return { latest, count, digests, page }, or compact: true (alias: include_stats: false) to omit the census stats block. Use digest for daily narrative summaries; use changes for raw field-level diffs."
+ }
+]

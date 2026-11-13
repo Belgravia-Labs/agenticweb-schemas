@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticweb.wiki/schema/ecosystem-census.schema.json",
+  "title": "agenticweb.wiki ecosystem census",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["generated", "url", "total_origins_in_census", "empirical_by_standard", "stratified_swarm"],
+  "$defs": {
+    "pitfall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue", "kind", "count"],
+      "properties": {
+        "issue": { "type": "string" },
+        "kind": { "type": "string", "enum": ["error", "warning"] },
+        "count": { "type": "integer" }
+      }
+    },
+    "endpoint_verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "domains_declaring_a2a": { "type": "integer" },
+        "live_callable": { "type": "integer" },
+        "pseudo_endpoint_html_homepage": { "type": "integer" },
+        "domains_declaring_mcp": { "type": "integer" },
+        "live_unauthenticated": { "type": "integer" },
+        "oauth_gated": { "type": "integer" },
+        "dead_or_404": { "type": "integer" }
+      }
+    },
+    "standard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_present", "strict_valid", "valid_legacy", "top_pitfalls", "verified_live_examples"],
+      "properties": {
+        "observed_present": { "type": "integer" },
+        "strict_valid": { "type": "integer" },
+        "valid_legacy": { "type": "integer" },
+        "top_pitfalls": { "type": "array", "items": { "$ref": "#/$defs/pitfall" } },
+        "verified_live_examples": { "type": "array", "items": { "type": "string" } },
+        "endpoint_verification": { "$ref": "#/$defs/endpoint_verification" }
+      }
+    },
+    "origin_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checked", "found"],
+      "properties": {
+        "checked": { "type": "string" },
+        "found": { "type": "array", "items": { "type": "string" } },
+        "grade": { "type": "string" },
+        "score": { "type": "integer" }
+      }
+    }
+  },
+  "properties": {
+    "generated": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "url": { "type": "string", "pattern": "^https://" },
+    "total_origins_in_census": { "type": "integer", "minimum": 0 },
+    "empirical_by_standard": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/standard" }
+    },
+    "stratified_swarm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_size",
+        "valid_probed",
+        "cohorts",
+        "outcomes",
+        "grades",
+        "preferred_modes",
+        "ai_crawler_postures",
+        "score_distribution",
+        "mcp_verification",
+        "a2a_verification",
+        "ard_coherence"
+      ],
+      "properties": {
+        "sample_size": { "type": "integer" },
+        "valid_probed": { "type": "integer" },
+        "cohorts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "1_known_publisher",
+            "2_docs_portals",
+            "3_ai_devtools_cloud",
+            "4_enterprise_fintech_commerce",
+            "5_general_web_control"
+          ],
+          "properties": {
+            "1_known_publisher": { "type": "integer" },
+            "2_docs_portals": { "type": "integer" },
+            "3_ai_devtools_cloud": { "type": "integer" },
+            "4_enterprise_fintech_commerce": { "type": "integer" },
+            "5_general_web_control": { "type": "integer" }
+          }
+        },
+        "outcomes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["blocked", "guard_rejected", "moved", "scored", "timeout"],
+          "properties": {
+            "blocked": { "type": "integer" },
+            "guard_rejected": { "type": "integer" },
+            "moved": { "type": "integer" },
+            "scored": { "type": "integer" },
+            "timeout": { "type": "integer" }
+          }
+        },
+        "grades": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["A+", "A", "B", "C", "D", "F"],
+          "properties": {
+            "A+": { "type": "integer" },
+            "A": { "type": "integer" },
+            "B": { "type": "integer" },
+            "C": { "type": "integer" },
+            "D": { "type": "integer" },
+            "F": { "type": "integer" }
+          }
+        },
+        "preferred_modes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "exa_or_http_fetch",
+            "llms_txt",
+            "mcp",
+            "moved",
+            "blocked",
+            "openapi",
+            "markdown_negotiation",
+            "agent_skills",
+            "a2a"
+          ],
+          "properties": {
+            "exa_or_http_fetch": { "type": "integer" },
+            "llms_txt": { "type": "integer" },
+            "mcp": { "type": "integer" },
+            "moved": { "type": "integer" },
+            "blocked": { "type": "integer" },
+            "openapi": { "type": "integer" },
+            "markdown_negotiation": { "type": "integer" },
+            "agent_skills": { "type": "integer" },
+            "a2a": { "type": "integer" }
+          }
+        },
+        "ai_crawler_postures": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "open_to_all",
+            "unspecified",
+            "waf_challenged",
+            "search_allowed_training_blocked",
+            "all_ai_blocked",
+            "search_partially_blocked"
+          ],
+          "properties": {
+            "open_to_all": { "type": "integer" },
+            "unspecified": { "type": "integer" },
+            "waf_challenged": { "type": "integer" },
+            "search_allowed_training_blocked": { "type": "integer" },
+            "all_ai_blocked": { "type": "integer" },
+            "search_partially_blocked": { "type": "integer" }
+          }
+        },
+        "score_distribution": { "type": "array", "items": { "type": "integer" } },
+        "mcp_verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domains_declaring_mcp", "live_unauthenticated", "oauth_gated", "dead_or_404"],
+          "properties": {
+            "domains_declaring_mcp": { "type": "integer" },
+            "live_unauthenticated": { "type": "integer" },
+            "oauth_gated": { "type": "integer" },
+            "dead_or_404": { "type": "integer" }
+          }
+        },
+        "a2a_verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domains_declaring_a2a", "live_callable", "pseudo_endpoint_html"],
+          "properties": {
+            "domains_declaring_a2a": { "type": "integer" },
+            "live_callable": { "type": "integer" },
+            "pseudo_endpoint_html": { "type": "integer" }
+          }
+        },
+        "ard_coherence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "domains_publishing_catalog",
+            "canonical_ard_json",
+            "deprecated_ai_catalog_only",
+            "coherent_all_entries_live",
+            "broken_or_dead_entries"
+          ],
+          "properties": {
+            "domains_publishing_catalog": { "type": "integer" },
+            "canonical_ard_json": { "type": "integer" },
+            "deprecated_ai_catalog_only": { "type": "integer" },
+            "coherent_all_entries_live": { "type": "integer" },
+            "broken_or_dead_entries": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "baseline_by_origin": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-zA-Z0-9.-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/origin_baseline" }
+    }
+  }
+}

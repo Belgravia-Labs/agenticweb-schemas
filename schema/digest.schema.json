@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticweb.wiki/schema/digest.schema.json",
+  "title": "agenticweb.wiki daily digest",
+  "description": "One day's digest: written items, each citing the sources it rests on, plus the day's measured stats. Written by the engine's `daily` command; served at /digest/<date>/index.json and by the MCP tool digest(date).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "date", "url", "generated_at", "window", "headline", "lede", "items", "stats", "record_changes", "method", "license"],
+  "$defs": {
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "source": {
+      "type": "object",
+      "required": ["url", "title", "publisher", "published", "label", "fetched"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://" },
+        "title": { "type": "string" },
+        "publisher": { "type": "string" },
+        "published": { "type": ["string", "null"] },
+        "label": { "enum": ["VERIFIED", "REPORTED"] },
+        "fetched": { "type": "boolean" }
+      }
+    },
+    "related": {
+      "type": "object",
+      "required": ["id", "name", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "adoption_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delta", "domains", "id", "name"],
+      "properties": {
+        "delta": { "type": ["integer", "null"] },
+        "domains": { "type": "integer" },
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "domain_move": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "id", "name"],
+      "properties": {
+        "domain": { "type": "string" },
+        "id": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "grade_change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "from", "score_from", "score_to", "to"],
+      "properties": {
+        "domain": { "type": "string" },
+        "from": { "type": "string" },
+        "score_from": { "type": "integer" },
+        "score_to": { "type": "integer" },
+        "to": { "type": "string" }
+      }
+    },
+    "mover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["delta", "pct", "repo", "stars"],
+      "properties": {
+        "delta": { "type": "integer" },
+        "pct": { "type": "number" },
+        "repo": { "type": "string" },
+        "stars": { "type": "integer" }
+      }
+    }
+  },
+  "properties": {
+    "version": { "const": 1 },
+    "date": { "$ref": "#/$defs/date" },
+    "url": { "type": "string", "pattern": "^https://agenticweb\\.wiki/digest/\\d{4}-\\d{2}-\\d{2}/$" },
+    "generated_at": { "type": "string" },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      }
+    },
+    "headline": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "lede": { "type": "string", "minLength": 1, "maxLength": 800 },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "body", "why_it_matters", "kind", "related", "sources", "stats"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}-\\d+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "body": { "type": "string" },
+          "why_it_matters": { "type": ["string", "null"] },
+          "kind": { "enum": ["spec", "adoption", "launch", "governance", "security", "research", "other"] },
+          "related": { "type": "array", "items": { "$ref": "#/$defs/related" } },
+          "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+          "stats": { "type": "array", "items": { "type": "string" } }
+        },
+        "anyOf": [
+          { "properties": { "sources": { "minItems": 1 } } },
+          { "properties": { "stats": { "minItems": 1 } } }
+        ]
+      }
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previous", "panel", "repos", "registry"],
+      "properties": {
+        "previous": { "anyOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+        "panel": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domains", "checked", "errors", "compared", "grades", "adoption", "gained", "lost", "grade_changes"],
+          "properties": {
+            "domains": { "type": "integer" },
+            "checked": { "type": "integer" },
+            "errors": { "type": "integer" },
+            "compared": { "type": "integer" },
+            "grades": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["A+", "A", "B", "C", "D", "F"],
+              "properties": {
+                "A+": { "type": "integer" },
+                "A": { "type": "integer" },
+                "B": { "type": "integer" },
+                "C": { "type": "integer" },
+                "D": { "type": "integer" },
+                "F": { "type": "integer" }
+              }
+            },
+            "adoption": { "type": "array", "items": { "$ref": "#/$defs/adoption_row" } },
+            "gained": { "type": "array", "items": { "$ref": "#/$defs/domain_move" } },
+            "lost": { "type": "array", "items": { "$ref": "#/$defs/domain_move" } },
+            "grade_changes": { "type": "array", "items": { "$ref": "#/$defs/grade_change" } }
+          }
+        },
+        "repos": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tracked", "movers"],
+          "properties": {
+            "tracked": { "type": "integer" },
+            "movers": { "type": "array", "items": { "$ref": "#/$defs/mover" } }
+          }
+        },
+        "registry": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["servers", "since", "versions"],
+          "properties": {
+            "servers": { "type": "integer" },
+            "since": { "type": "string" },
+            "versions": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "record_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["record_id", "name", "summary", "url", "label", "date"],
+        "properties": {
+          "record_id": { "type": "string" },
+          "name": { "type": "string" },
+          "summary": { "type": "string" },
+          "url": { "type": "string", "pattern": "^https://" },
+          "label": { "type": "string" },
+          "date": { "type": "string" }
+        }
+      }
+    },
+    "previous": { "anyOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+    "method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "candidates", "kept", "facts", "models", "notes", "rules", "after_dedupe", "fetched"],
+      "properties": {
+        "sources": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "arxiv": { "type": "integer" },
+            "datatracker": { "type": "integer" },
+            "exa": { "type": "integer" },
+            "feeds": { "type": "integer" },
+            "hn": { "type": "integer" },
+            "parallel": { "type": "integer" },
+            "tips": { "type": "integer" }
+          }
+        },
+        "candidates": { "type": "integer" },
+        "kept": { "type": "integer" },
+        "facts": { "type": "integer" },
+        "models": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["triage", "writer"],
+          "properties": {
+            "triage": { "type": "string" },
+            "writer": { "type": "string" }
+          }
+        },
+        "notes": { "type": "array", "items": { "type": "string" } },
+        "rules": { "type": "string" },
+        "after_dedupe": { "type": "integer" },
+        "fetched": { "type": "integer" }
+      }
+    },
+    "license": { "const": "CC BY 4.0" }
+  }
+}
